@@ -1,6 +1,3 @@
-# tteso-tes-opentes
-Repositório de código para armazenar as soluções desenvolvidas de sistemas de energia transativos.
-
 ## #TTESO
 
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
@@ -8,7 +5,7 @@ Repositório de código para armazenar as soluções desenvolvidas de sistemas d
 [![image](https://img.shields.io/badge/-Python%20Version%20|%203.12.11-42b85a?logo=Python&logoColor=fbec41&color=42b85a&labelColor=grey&style=flat)](https://www.python.org/downloads/release/python-31112/)
 [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?logo=discord&logoColor=white)](https://discord.com/channels/1415180099644297368/1415431164717564065)
 
-Olá usuário! Aqui você encontrará os passos para poder rodar a simulação da qualidade de dados de energia no seu computador!
+Olá usuário! Aqui você encontrará os passos para poder armazenar as soluções desenvolvidas de sistemas de energia transativos e armazenar todos os recursos!
 
 Antes de mais nada se você é novo por aqui, seja bem-vindo(a)! Para uma melhor compreensão de como realizar uma simulação local (no seu computador) de um repositório (arquivo no GitHub) basta entender que você irá fazer uma cópia desse arquivo (clonar) na sua máquina. Além disso, essa cópia será realizada através de códigos, assim como criar arquivos (documentos) na área de trabalho. Não precisa de desesperar, basta seguir os passos abaixo! **;D** 
 ### REQUISITOS INICIAIS
