@@ -1,0 +1,23 @@
+[project]
+name = "tteso-tes-opentes"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12.11"
+dependencies = [
+    # Bibliotecas originais (versões mais recentes compatíveis)
+    "haversine==2.9.0",
+    "matplotlib==3.10.7",
+    "numpy==2.3.4",
+    "pandas==2.3.3",
+    "pillow==12.0.0",
+    "plotly==6.4.0",
+    "seaborn==0.13.2",
+    "streamlit==1.51.0",
+    "tables==3.10.2",
+
+    # Novas bibliotecas de otimização
+    "pymoo==0.6.1.5",
+    "pyomo==6.9.5",
+    "pyswarms==1.3.0",
+]
