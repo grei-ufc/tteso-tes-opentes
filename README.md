@@ -44,7 +44,7 @@ Para conferir se realmente deu certo basta escrever:
 </div>
 
 ```bash
-  git clone https://github.com/grei-ufc/tsdq-dataview-opentes.git
+  git clone https://github.com/grei-ufc/tteso-tes-opentes.git
 ```
 
 **4.** Agora com a pasta já na sua máquina vamos para dentro do arquivo.
