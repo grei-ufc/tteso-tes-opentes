@@ -1,0 +1,14 @@
+[project]
+name = "des-demos-master"
+version = "1.0.0"
+description = "A second scenario co-simulation framework mosaik"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "arrow>=1.0",
+    "mosaik>=3.5.0",
+    "mosaik-csv>=1.2",
+    "mosaik-hdf5>=0.4",
+    "simbench>=1.6.1",
+    "mosaik-web>=0.4.0",
+]

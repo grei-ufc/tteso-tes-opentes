@@ -1,0 +1,120 @@
+Anotações do Código EPSO do Levi
+
+O EPSO (Evolutionary Particle Swarm Optimization) está configurado como monoobjetivo,ou seja,
+ele minimiza uma única variável de desempenho do sistema elétrico, algo como perdas, custo ou
+desvio de tensão.
+
+Cada partícula representa uma configuração de alocação de baterias:
+
+ 	- Cada posição no vetor = um nó da rede onde será colocada uma bateria.
+ 	- Exemplo: particula = [5, 8, 17, 32, 16, 14, 74] → baterias nos nós 5, 8, 17, etc.
+ 	- O EPSO vai variando essa configuração ao longo das iterações, buscando a que gera o menor
+ 	valor do objetivo.
+
+A avaliação (ou “fitness”) de cada partícula é feita por uma simulação externa,que calcula o
+desempenho do sistema com aquela configuração. Por isso o código chama:
+
+model_dso = run_opt(...)
+Eval[i] = value(model_dso.obj)
+
+→ onde run_opt() provavelmente é um modelo em Pyomo que simula o fluxo de potência, custos ou desempenho.
+
+
+🧠 Estrutura lógica do algoritmo
+
+ 	🏁 1. Inicialização
+
+		npar = 10      # número de partículas
+		nvar = 7       # dimensão da partícula (quantos nós com bateria)
+		max_it = 15000 # iterações máximas
+		T = 1          # taxa de mutação
+ 
+ 		Cada partícula é um vetor com 7 elementos (endereços de nós).
+ 		O enxame terá 10 partículas. Depois,
+
+ 		particula = np.random.randint(7, 75, size=nvar)
+
+ 		→ Cria uma partícula inicial aleatória, com valores entre 7 e 74 (limites dos nós possíveis).
+
+ 	🧩 2. Criação do enxame
+
+ 		Particulas = np.tile(particula, (npar, 1))
+
+ 		→ Cria a matriz de partículas, ou seja, o enxame completo. Cada linha é uma partícula.
+ 		A partir daí, define:
+ 
+ 		• pesos de influência (Weighta, Weightb, Weightc)
+ 		• velocidades (Velocities)
+ 		• melhores soluções pessoais e globais
+
+ 		Essas variáveis controlam como o enxame se move no espaço de busca.
+
+ 	🔄 3. Loop principal (iterações)
+
+ 		O algoritmo itera até max_it vezes (ou parar antes se atingir tolerância).
+
+ 		Dentro do for it in range(max_it): ocorrem as etapas do EPSO:
+
+
+ 		a) Replicação
+
+ 		Cada partícula é replicada (mantendo tamanho do enxame constante).
+
+ 		b) Mutação
+
+		Na, Nb, Nc = np.random.normal(0, 1, (npar, nvar))
+		Weighta = Na * T * w[it] * Weighta
+		Weightb = Weightb * Nb * T
+		Weightc = Weightc * Nc * T
+
+ 		→ Aplica pequenas perturbações gaussianas nos pesos — isso é o componente evolutivo do EPSO.]
+
+ 		c) Reprodução
+
+ 		a = Weighta * Velocities
+		b = Weightb * (Personal_bests - Particulas)
+		c = Weightc * (global_best - Particulas)
+		Velocities = a + b + c
+
+ 		→ Mistura os comportamentos de inércia (a), social (c) e cognitivo (b).
+
+ 		No PSO clássico, isso seria controlado por coeficientes fixos w, c1, c2,
+ 		mas aqui o EPSO os evolui dinamicamente.
+
+ 		d) Atualização
+
+ 		Particulas = round_half_up(Particulas + Velocities)
+
+ 		→ Move cada partícula e arredonda os valores para manter nós inteiros (endereços válidos).
+ 		Depois usa np.clip(7, 74) pra respeitar os limites físicos.
+
+ 		e) Unicidade e diversidade
+
+		Particulas[i] = uniquer(Particulas[i])
+
+ 		→ Garante que dentro de uma partícula não haja nós repetidos.
+ 		E o trecho seguinte garante diversidade entre partículas (evita enxame colapsado).
+
+ 	🎯 4. Avaliação (“Fitness”)
+
+ 		A parte que chama a simulação:
+
+		for i in range(npar):
+    			particula_int = Particulas[i].astype(int).tolist()
+    			for j in particula_int:
+       				config_bess_dso_dict_[j] = bateria
+    			model_dso = run_opt(...)
+    			Eval[i] = value(model_dso.obj)
+		→ Cada configuração de nós é testada, o modelo run_opt() retorna um valor escalar de desempenho 		(obj), 		e esse é o fitness.
+
+	🏆 5. Seleção
+	
+		O EPSO substitui partículas antigas por novas se o desempenho melhorou:
+
+		improved_mask = Eval < Fitness_Personal_Bests
+
+		→ Atualiza o melhor pessoal (Personal_bests) e o melhor global (global_best).
+	
+	🧮 6. Armazenamento e parada
+
+		Salva resultados por iteração e, se atingir tolerância (Fitness_global_best <= limite), interrompe.
